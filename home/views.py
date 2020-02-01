@@ -59,8 +59,11 @@ def get_home_page(request):
         list_contest.append(content)
 
     return_dict.update({'list_content': list_contest})
+    return_dict.update({'list_contest': get_all_contests()})
     
     template = get_template('home/home.html')
+
+
     print(return_dict)
     return HttpResponse(template.render(return_dict, request))
 

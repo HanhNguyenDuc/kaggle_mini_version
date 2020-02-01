@@ -22,7 +22,7 @@ class Contest(models.Model):
     description = models.CharField(name="description", default="Empty", max_length=1000)
     data_required = models.BooleanField(name="data_require", default=True)
     represent_image = models.CharField(name="represent_image", default="/", max_length=100)
-    solution_file = models.FileField(name="solution_file", default=None)
+    solution_file = models.FileField(name="solution_file", default=None, upload_to="files")
     
 
     # def __str__(self):
@@ -46,7 +46,7 @@ class Submission(models.Model):
     id = models.IntegerField(name="id", auto_created=True, primary_key=True)
     member = models.ForeignKey(Member, name="member", on_delete=models.CASCADE, default=None)
     contest = models.ForeignKey(Contest, name="contest", on_delete=models.CASCADE, default=None)
-    file = models.FileField(name="file")
+    file = models.FileField(name="file", upload_to="files")
     date = models.DateField(name="date", auto_now=True)
     score = models.FloatField(name="score", default=0)
     

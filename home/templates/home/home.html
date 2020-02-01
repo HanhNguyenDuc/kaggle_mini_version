@@ -2,6 +2,12 @@
 
 {% load crispy_forms_tags %}
 
+{% block dropdown %}
+    {% for contest in list_contest %}
+        <a class="dropdown-item" href="{{contest.url}}">{{contest.name}}</a>
+    {% endfor %}
+{% endblock %}
+
 {% block content %}
 
     {% for content in list_content %}
