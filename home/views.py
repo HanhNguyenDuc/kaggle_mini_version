@@ -162,4 +162,19 @@ def get_contest(request, id = 1):
 
     return render(request, 'home/contest.html', {'form': form, 'content': content})
 
+@decorators.login_required(login_url="/home/login")
+def get_submission_page(request, id=1):
+    contest = Contest.objects.get(id=1)
+    submissions = Submission.objects.filter(contest=contest)
+    content = []
+    for submission in submissions:
+        tmp_content = {}
+        tmp_content.update({'first_name': submission.member.first_name})
+        tmp_content.update({'last_name': submission.member.last_name})
+        tmp_content.update({'score': submission.score})
+        content.append(tmp_content)
+    
+    return render(request, 'home/submissions.html', {'content': content})
+
+
 

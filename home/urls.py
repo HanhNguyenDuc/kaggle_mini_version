@@ -1,7 +1,7 @@
 
 from django.contrib.auth import views as auth_view
 from django.urls import path
-from .views import RegisterView, get_home_page, get_contest, get_info_page, upload_file, upload_file_2
+from .views import RegisterView, get_home_page, get_contest, get_info_page, upload_file, upload_file_2, get_submission_page
 
 urlpatterns = [
     path(r'registration/', RegisterView.as_view(), name='register'),
@@ -12,5 +12,5 @@ urlpatterns = [
     path(r'info/', get_info_page, name='info'),
     path(r'upload_demo/', upload_file, name='upload'),
     path(r'upload_demo_2/', upload_file_2, name="upload2"),
-    
+    path(r'submission/<int:id>', get_submission_page, name="submission")
 ]
