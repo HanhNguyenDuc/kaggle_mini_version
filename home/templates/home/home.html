@@ -1,0 +1,17 @@
+{% extends 'home/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    {% for content in list_content %}
+        <div class="row justify-content-between">
+            <div class="col-md-12">
+                <h2><a href="/home/contest/{{content.contest_id}}">{{content.name}}</a></h2>
+                <h3>Max Score: {{content.max_score}} </h3>
+                <p>Description: {{content.description}}<p>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

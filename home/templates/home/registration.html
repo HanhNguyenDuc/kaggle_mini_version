@@ -1,0 +1,46 @@
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href='{% static "css/registration_style.css" %}' media="screen" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600' rel='stylesheet' type='text/css'>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
+</head>    
+
+
+<body>    
+
+    <div class="testbox">
+    <h1>Registration</h1>
+
+    <form action="" method="POST">
+    {% csrf_token %}
+        <hr>
+        {% comment %} <div class="accounttype">
+        <input type="radio" value="None" id="radioOne" name="account" checked/>
+        <label for="radioOne" class="radio" chec>Personal</label>
+        <input type="radio" value="None" id="radioTwo" name="account" />
+        <label for="radioTwo" class="radio">Company</label>
+        </div> {% endcomment %}
+        <hr>
+        <label id="icon" for="name"><i class="icon-envelope "></i></label>
+        <input type="text" name="email" id="name" placeholder="Email" required/>
+        <label id="icon" for="name"><i class="icon-user "></i></label>
+        <input type="text" name="username" id="username" placeholder="username" required/>
+        <label id="icon" for="name"><i class="icon-user"></i></label>
+        <input type="text" name="firstname" id="firstname" placeholder="First Name" required/>
+        <label id="icon" for="name"><i class="icon-user"></i></label>
+        <input type="text" name="lastname" id="lastname" placeholder="Last Name" required/>
+        <label id="icon" for="name"><i class="icon-shield"></i></label>
+        <input type="password" name="password" id="password" placeholder="Password" required/>
+        
+        {% comment %} <div class="gender">
+            <input type="radio" value="None" id="male" name="gender" checked/>
+            <label for="male" class="radio" chec>Male</label>
+            <input type="radio" value="None" id="female" name="gender" />
+            <label for="female" class="radio">Female</label>
+        </div>  {% endcomment %}
+        <p>By clicking Register, you agree on our <a href="#">terms and condition</a>.</p>
+        {% comment %} <a href="#" class="button">Register</a> {% endcomment %}
+        <button class="button">Login</button>
+    </form>
+    </div>
+</body>
