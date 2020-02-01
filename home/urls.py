@@ -11,5 +11,6 @@ urlpatterns = [
     path(r'contest/<int:id>', get_contest, name = 'contest'),
     path(r'info/', get_info_page, name='info'),
     path(r'upload_demo/', upload_file, name='upload'),
-    path(r'upload_demo_2/', upload_file_2, name="upload2")
+    path(r'upload_demo_2/', upload_file_2, name="upload2"),
+    
 ]

@@ -6,6 +6,7 @@ from .models import Member, Contest, Relationship, Submission
 from django.contrib.auth import decorators
 from django.http import HttpResponseRedirect
 from .forms import UploadFileForm, ModelFormWithFileField, SubmissionForm
+import pandas as pd
 # Create your views here.
 
 class RegisterView(View):
@@ -98,12 +99,54 @@ def upload_file_2(request):
 @decorators.login_required(login_url = "home/login")
 def get_contest(request, id = 1):
     if request.method == 'POST':
+        data = {}
+        contest = Contest.objects.get(id=id)
+        user = request.user
         form = SubmissionForm(request.POST, request.FILES)
         print(request.FILES)
         if form.is_valid:
-            
-            submission = Submission(file=request.FILES['file'])
-            submission.save()
+            submit_file = request.FILES['file']
+            max_size = 102400
+            if submit_file.size > max_size:
+                data['server_msg'] = "Your submission is denied. Error 01"
+            elif submit_file.name.split('.')[-1] not in ['csv']:
+                data['server_msg'] = "Your submission is denied. Error 02"
+
+            try:
+                submission = Submission(file=submit_file, member=user, contest=contest)
+                submission.save()
+                print(submission.file)
+                data['server_msg'] = "Submit sucessfully"
+
+            except Exception as e:
+                data['server_msg'] = "Error while interacting with database {}".format(e)
+
+            solution_file = contest.solution_file.file
+            df = pd.read_csv(solution_file)
+            result_dict = df.set_index('ImageID')['Label'].to_dict()
+            # print(result_dict)
+            try:
+                sub_file = submission.file.file
+                df = pd.read_csv(sub_file)
+                sub_dict = df.set_index('ImageID')['Label'].to_dict()
+                # print(sub_dict)
+                total_c = 0
+                good_pred = 0
+                for key in result_dict:
+                    total_c += 1
+                    try:
+                        if result_dict[key] == sub_dict[key]:
+                            good_pred += 1
+                    except:
+                        data['server_msg'] = "File submitted has wrong format"
+                score = good_pred/total_c
+                submission.score = score
+                submission.save()
+                data['server_msg'] = "Last submission has result: {}".format(score)
+            except Exception as e:
+                print(e)
+                data['server_msg'] = "File submitted is illegal"
+            print(data['server_msg'])
             return HttpResponseRedirect('/home/contest/{}'.format(id))
     else:
         form = SubmissionForm()
