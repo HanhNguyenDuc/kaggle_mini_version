@@ -2,14 +2,23 @@
 
 {% load crispy_forms_tags %}
 
+{% block dropdown %}
+    {% for contest in list_contest %}
+        <a class="dropdown-item" href="{{contest.url}}">{{contest.name}}</a>
+    {% endfor %}
+{% endblock %}
+
 {% block content %}
+    <div class="row">
+        <button class="btn btn-outline-success my-2 my-sm-0"><a href="/home/submission/{{content.id}}">Submissions</a></button>
+    </div>
     <div class="row">
         <div class="col-md-8">
             <h2>{{content.name}}</h2>
             <h3>Max Score: {{content.max_score}}</h3>
             <p>{{content.description}}</p>
             <p>Data Example: </p>
-            <img src="{{content.img_url}}"/>
+            <img src="{{content.img_url}}" style="width: 100%"/>
             {% comment %} <h3>Download Data: </h3> {% endcomment %}
             <p>You can download data here:</p>
             <p><a href="{{content.data_path}}" download>Download Data</a></p>

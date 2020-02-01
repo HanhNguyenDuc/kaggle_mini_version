@@ -9,6 +9,19 @@ from .forms import UploadFileForm, ModelFormWithFileField, SubmissionForm
 import pandas as pd
 # Create your views here.
 
+def get_all_contests():
+    # return contest_name and contest_url
+    contests = Contest.objects.all()
+    res = []
+    for contest in contests:
+        tmp_contest = {}
+        tmp_contest.update({'name': contest.name})
+        tmp_contest.update({'url': '/home/contest/{}'.format(contest.id)})
+        res.append(tmp_contest)
+    
+    return res
+
+
 class RegisterView(View):
     def get(self, request):
         template = get_template('home/registration.html')
@@ -159,12 +172,13 @@ def get_contest(request, id = 1):
     content.update({'description': contest.description})
     content.update({'data_path': contest.data_path})
     content.update({'img_url': contest.represent_image})
+    content.update({'id': id})
 
-    return render(request, 'home/contest.html', {'form': form, 'content': content})
+    return render(request, 'home/contest.html', {'form': form, 'content': content, 'list_contest': get_all_contests()})
 
 @decorators.login_required(login_url="/home/login")
 def get_submission_page(request, id=1):
-    contest = Contest.objects.get(id=1)
+    contest = Contest.objects.get(id=id)
     submissions = Submission.objects.filter(contest=contest)
     content = []
     for submission in submissions:
@@ -174,7 +188,8 @@ def get_submission_page(request, id=1):
         tmp_content.update({'score': submission.score})
         content.append(tmp_content)
     
-    return render(request, 'home/submissions.html', {'content': content})
+    
+    return render(request, 'home/submissions.html', {'content': content, 'list_contest': get_all_contests()})
 
 
 
