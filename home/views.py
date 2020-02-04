@@ -3,11 +3,25 @@ from django.views import View
 from django.template.loader import get_template
 from django.http import HttpResponse
 from .models import Member, Contest, Relationship, Submission
-from django.contrib.auth import decorators
+from django.contrib.auth import decorators, login
 from django.http import HttpResponseRedirect
-from .forms import UploadFileForm, ModelFormWithFileField, SubmissionForm
+from .forms import UploadFileForm, ModelFormWithFileField, SubmissionForm, MemberCreationUIForm, LoginForm
 import pandas as pd
 # Create your views here.
+
+class LoginView(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'home/login.html', {'form': form})
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = form.login(request)
+            if user:
+                login(request, user)
+                return HttpResponseRedirect('/home/')
+        
+        return render(request, 'home/login.html', {'form': form})
 
 def get_all_contests():
     # return contest_name and contest_url
@@ -24,22 +38,20 @@ def get_all_contests():
 
 class RegisterView(View):
     def get(self, request):
+        form = MemberCreationUIForm()
         template = get_template('home/registration.html')
-        return HttpResponse(template.render({}, request))
+        return HttpResponse(template.render({'form': form}, request))
 
     def post(self, request):
-        username = request.POST['username']
-        email = request.POST['email']
-        firstname = request.POST['firstname']
-        lastname = request.POST['lastname']
-        password = request.POST['password']
+        form = MemberCreationUIForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print('Member has been saved')
+            return HttpResponseRedirect('/home/login')
+        else:
+            print('form is not valid')
 
-        template = get_template('home/redirect.html')
-
-        member = Member(username=username, password=password, email=email, first_name=firstname, last_name=lastname)
-        member.save()
-
-        return HttpResponse(template.render({}, request))
+        return HttpResponse(render(request, 'home/registration.html', {'form': form}))
 
 
 @decorators.login_required(login_url='/home/login/')
