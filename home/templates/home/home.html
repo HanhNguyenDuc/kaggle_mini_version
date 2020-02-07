@@ -1,23 +1,65 @@
 {% extends 'home/base.html' %}
 
 {% load crispy_forms_tags %}
+{% load static %}
 
-{% block dropdown %}
+{% comment %} {% block dropdown %}
     {% for contest in list_contest %}
         <a class="dropdown-item" href="{{contest.url}}">{{contest.name}}</a>
     {% endfor %}
+{% endblock %} {% endcomment %}
+
+{% block banner %}
+
+    <section class="banner full">
+    {% for content in list_content %}
+        <article>
+            <img src="{{ content.img_url }}" style="width: 600px; height: 300px;" alt="" />
+            <div class="inner">
+                <header>
+                    <p>On going</p>
+                    <h2><a href="/home/contest/{{content.contest_id}}">{{ content.name }}</a></h2>
+                </header>
+            </div>
+        </article>
+        {% comment %} <article>
+					<img src="{% static 'images/cover.png' %}" style="width: 600px; height: 300px;" alt="" />
+					<div class="inner">
+						<header>
+							<p>Lorem ipsum dolor sit amet nullam feugiat</p>
+							<h2>Magna etiam</h2>
+						</header>
+					</div>
+				</article> {% endcomment %}
+    {% endfor %}
+    </section>
 {% endblock %}
 
 {% block content %}
 
-    {% for content in list_content %}
-        <div class="row justify-content-between">
-            <div class="col-md-12">
-                <h2><a href="/home/contest/{{content.contest_id}}">{{content.name}}</a></h2>
-                <h3>Max Score: {{content.max_score}} </h3>
-                <p>Description: {{content.description}}<p>
+        {% for content in list_content %}
+            
+            <div>
+                <div class="box">
+                    <div class="image fit">
+                        <img src="{{content.img_url}}" style="text-align: center; width: 100%; height: 300px;" alt="" />
+                    </div>
+                    <div class="content">
+                        <header class="align-center">
+                            <p>{{ content.name }}</p>
+                            <h2></h2>
+                        </header>
+                        <p class="description_area">{{ content.description }}</p>
+                        <footer class="align-center">
+                            <a href="/home/contest/{{content.contest_id}}" class="button alt">Xem Thêm</a>
+                        </footer>
+                    </div>
+                </div>
             </div>
-        </div>
-    {% endfor %}
-
+        {% endfor %}
 {% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/custom_home_hanh.js' %}"></script>
+{% endblock %}
+
