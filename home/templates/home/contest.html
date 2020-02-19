@@ -1,37 +1,190 @@
-{% extends "home/base.html" %}
-
-{% load crispy_forms_tags %}
-
-{% block dropdown %}
-    {% for contest in list_contest %}
-        <a class="dropdown-item" href="{{contest.url}}">{{contest.name}}</a>
-    {% endfor %}
-{% endblock %}
-
-{% block content %}
-    <div class="row">
-        <button class="btn btn-outline-success my-2 my-sm-0"><a href="/home/submission/{{content.id}}">Submissions</a></button>
-    </div>
-    <div class="row">
-        <div class="col-md-8">
-            <h2>{{content.name}}</h2>
-            <h3>Max Score: {{content.max_score}}</h3>
-            <p>{{content.description}}</p>
-            <p>Data Example: </p>
-            <img src="{{content.img_url}}" style="width: 100%"/>
-            {% comment %} <h3>Download Data: </h3> {% endcomment %}
-            <p>You can download data here:</p>
-            <p><a href="{{content.data_path}}" download>Download Data</a></p>
+<!DOCTYPE html>
+<html lang ="en">
+{% load static %}
+{% load sizify %}
+	<head>
+		<title>ProPTIT</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="{% static 'css/main01.css' %}" />
+	</head>
+	<body>
+        <div>
+            <img src="{% static 'images/anime.jpg' %}" style="width: 100%; height: 400px;" alt="" />
         </div>
-        <div class="col-md-4">
-        <h3>Submit your answer</h3>
-        <form action="" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{form|crispy}}
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
-        </form>
-        </div>
-    </div>
+		<!-- Header -->
+			<header id="header" class="alt">
+				<div class="logo"><img src="{% static 'images/ProPTIT.png' %}" style="width: 40px; height: 40px;" alt="" />
+					<a href="/home/">ProPTIT <span>AI FORCE</span></a></div>
+				<a href="#menu">Menu</a>
+			</header>
+
+		<!-- Nav -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="/home/">Home</a></li>
+					<li><a href="/home/">Contest</a></li>
+					<li><a href="logout">Logout</a></li>
+				</ul>
+			</nav>
+			<!-- Content -->
+			{% load crispy_forms_tags %}
+
+			<div style="min-height: 1000px;">
+				<div class="row" style="margin-left: 0%;">
+					<input id="tab1" type="radio" name="tabs" checked>
+					<label for="tab1"><i class="fa fa-code"></i><span>Overview</span></label>
+					<input id="tab2" type="radio" name="tabs">
+					<label for="tab2"><i class="fa fa-pencil-square-o"></i><span>Dataset</span></label>
+					<input id="tab3" type="radio" name="tabs">
+					<label for="tab3"><i class="fa fa-book"></i><span>Submissions</span></label>
+					<input id="tab4" type="radio" name="tabs">
+					<label for="tab4"><i class="fa fa-star"></i><span>Rank</span></label>
+				</div>
+	
+				<section id="content1" class="tab-content" style="margin-left: 30%;">
+					<h3>Overview</h3>
+					  	<p>
+							{% block content %}
+							<div class="row">
+								<div class="col-md-8">
+									<h2>{{content.name}}</h2>
+									<h3>Max Score: {{content.max_score}}</h3>
+									<p>{{content.description}}</p>
+								</div>
+								
+							</div>
+							{% endblock content %}
+					  	</p>
+					  
+				</section>
+
+				<section id="content2" class="tab-content" style="margin-left: 30%;">
+					<h3>Dataset</h3>
+						<div class="row">
+							<div class="col-md-8">
+								<p>Data Example: </p>
+								<img src="{{content.img_url}}" style="width: 100%"/>
+								{% comment %} <h3>Download Data: </h3> {% endcomment %}
+								<p>You can download data here:</p>
+								<p><a href="{{content.data_path}}" download>Download Data</a></p>
+							</div>
+
+						</div>
+				  
+				</section>
+
+				<section id="content3">
+					<div class="row" style="margin-left: 10%">
+						<div class="col-md-8">
+							<div class="limiter">
+								<div class="container-table100">
+									<div class="wrap-table100">
+										<div class="table100">
+											<table>
+												<thead>
+													<tr class="table100-head">
+														<th class="column1">Order</th>
+														<th class="column2">First Name</th>
+														<th class="column3">Last Name</th>
+														<th class="column4">Score</th>
+														<th class="column5">File size</th>
+														<th class="column6">Date</th>
+													</tr>
+												</thead>
+												<tbody>
+														{% for sc in submission_content%}
+															<tr>
+																<td class="column1">{{sc.order}}</td>
+																<td class="column2">{{sc.first_name}}</td>
+																<td class="column3">{{sc.last_name}}</td>
+																<td class="column4">{{sc.score}}</td>
+																<td class="column5">{{sc.file_size|sizify}}</td>
+																<td class="column6">{{sc.date}}</td>
+															</tr>
+														{% endfor %}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4" style="margin-left: 20%;">
+							<h3>Submit your answer</h3>
+							<form action="" method="POST" enctype="multipart/form-data">
+								{% csrf_token %}
+								{{form|crispy}}
+								<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
+							</form>
+						</div>
+					</div>
+						
+				</section>
+				<section id="content444" class="tab-content">
+
+							<h3>Rank</h3>
+							<table class="table">
+								<thead>
+									<tr class="table100-head">
+										<th class="col-auto">Order</th>
+										<th class="col-auto">First Name</th>
+										<th class="col-auto">Last Name</th>
+										<th class="col-auto">Score</th>
+									</tr>
+								</thead>
+								<tbody>
+										{% for sc in rank_content%}
+											<tr>
+												<td class="column1">{{sc.order}}</td>
+												<td class="column2">{{sc.first_name}}</td>
+												<td class="column3">{{sc.last_name}}</td>
+												<td class="column4">{{sc.score}}</td>
+											</tr>
+										{% endfor %}
+								</tbody>
+							</table>
+							</div>
+				  
+				</section>
+	
+			</div> 
+			
+				
+            
 
 
-{% endblock content %}
+		<!-- Footer -->
+			<section id="two" class="wrapper style3">
+				<div class="inner">
+					<header class="align-center">
+						<p>backend by Hanh Nguyen Duc</p>
+						<h2>Trang web submit của team AI Force ProPTIT</h2>
+					</header>
+				</div>
+			</section>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="container">
+					<ul class="icons">
+						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
+					</ul>
+				</div>
+				<div class="copyright">
+					COPYRIGHT © 2020 Đô Đô
+				</div>
+			</footer>
+		<!-- Scripts -->
+			<script src="{% static 'js/jquery.min.js' %}"></script>
+			<script src="{% static 'js/jquery.scrollex.min.js' %}"></script>
+			<script src="{% static 'js/skel.min.js' %}"></script>
+			<script src="{% static 'js/util01.js' %}"></script>
+			<script src="{% static 'js/main01.js' %}"></script>
+			<script src="{% static 'js/contest_custom.js' %}"></script>
+
+	</body>
+</html>

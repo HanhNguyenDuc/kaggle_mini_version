@@ -7,6 +7,7 @@ from django.contrib.auth import decorators, login
 from django.http import HttpResponseRedirect
 from .forms import UploadFileForm, ModelFormWithFileField, SubmissionForm, MemberCreationUIForm, LoginForm
 import pandas as pd
+from django.db.models import Max
 # Create your views here.
 
 class LoginView(View):
@@ -139,11 +140,11 @@ def get_contest(request, id = 1):
                 data['server_msg'] = "Your submission is denied. Error 01"
             elif submit_file.name.split('.')[-1] not in ['csv']:
                 data['server_msg'] = "Your submission is denied. Error 02"
-
+            submission_id = None
             try:
                 submission = Submission(file=submit_file, member=user, contest=contest)
                 submission.save()
-                print(submission.file)
+                submission_id = Submission.objects.count()
                 data['server_msg'] = "Submit sucessfully"
 
             except Exception as e:
@@ -154,7 +155,8 @@ def get_contest(request, id = 1):
             result_dict = df.set_index('ImageID')['Label'].to_dict()
             # print(result_dict)
             try:
-                sub_file = submission.file.file
+                submission = Submission.objects.get(id=submission_id)
+                sub_file = submission.file
                 df = pd.read_csv(sub_file)
                 sub_dict = df.set_index('ImageID')['Label'].to_dict()
                 # print(sub_dict)
@@ -189,7 +191,45 @@ def get_contest(request, id = 1):
     content.update({'img_url': contest.represent_image})
     content.update({'id': id})
 
-    return render(request, 'home/contest.html', {'form': form, 'content': content, 'list_contest': get_all_contests()})
+    contest = Contest.objects.get(id=id)
+    submissions = Submission.objects.filter(contest=contest)
+    submission_content = []
+    for key, submission in enumerate(submissions):
+        tmp_content = {}
+        tmp_content.update({'order': key})
+        tmp_content.update({'first_name': submission.member.first_name})
+        tmp_content.update({'last_name': submission.member.last_name})
+        tmp_content.update({'score': submission.score})
+        tmp_content.update({'file_size': submission.file.size})
+        tmp_content.update({'date': submission.date})
+        submission_content.append(tmp_content)
+
+    member_list = Member.objects.all()
+    rank_list = []
+    counter = 0
+    for member in member_list:
+        sub_list = Submission.objects.filter(member=member)
+        highest_score = sub_list.aggregate(Max('score'))['score__max']
+        if highest_score:
+            counter += 1
+            tmp_rank = {}
+            tmp_rank.update({'order': key})
+            tmp_rank.update({'first_name': member.first_name})
+            tmp_rank.update({'last_name': member.last_name})
+            tmp_rank.update({'score': highest_score})
+            rank_list.append(tmp_rank)
+
+    return render(
+        request, 
+        'home/contest.html', 
+        {
+            'form': form, 
+            'content': content, 
+            'list_contest': get_all_contests(),
+            'submission_content': submission_content,
+            'rank_content': rank_list,
+        }
+    )
 
 @decorators.login_required(login_url="/home/login")
 def get_submission_page(request, id=1):
@@ -204,7 +244,14 @@ def get_submission_page(request, id=1):
         content.append(tmp_content)
     
     
-    return render(request, 'home/submissions.html', {'content': content, 'list_contest': get_all_contests()})
+    return render(
+        request, 
+        'home/submissions.html', 
+        {
+            'content': content, 
+            'list_contest': get_all_contests()
+        }
+    )
 
 
 
