@@ -1,2 +1,2 @@
-pip install django-crispy-forms
+django-crispy-forms
 pandas
