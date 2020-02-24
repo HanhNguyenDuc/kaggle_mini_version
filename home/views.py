@@ -25,7 +25,6 @@ class LoginView(View):
         return render(request, 'home/login.html', {'form': form})
 
 
-@decorators.login_required(login_url='/login/')
 def get_all_contests():
     # return contest_name and contest_url
     contests = Contest.objects.all()
