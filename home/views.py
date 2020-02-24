@@ -20,7 +20,7 @@ class LoginView(View):
             user = form.login(request)
             if user:
                 login(request, user)
-                return HttpResponseRedirect('/home/')
+                return HttpResponseRedirect('/')
         
         return render(request, 'home/login.html', {'form': form})
 
