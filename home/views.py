@@ -24,6 +24,8 @@ class LoginView(View):
         
         return render(request, 'home/login.html', {'form': form})
 
+
+@decorators.login_required(login_url='/login/')
 def get_all_contests():
     # return contest_name and contest_url
     contests = Contest.objects.all()
@@ -55,7 +57,7 @@ class RegisterView(View):
         return HttpResponse(render(request, 'home/registration.html', {'form': form}))
 
 
-@decorators.login_required(login_url='/home/login/')
+@decorators.login_required(login_url='/login/')
 def get_home_page(request):
     contest_list= list(Contest.objects.all())
     print(vars(contest_list[0]))
@@ -80,19 +82,19 @@ def get_home_page(request):
     print(return_dict)
     return HttpResponse(template.render(return_dict, request))
 
-@decorators.login_required(login_url='/home/login/')
+@decorators.login_required(login_url='/login/')
 def get_contest_page(request):
     template = get_template('home/contest.html')
     return HttpResponse(template.render({}, request))
 
 
-@decorators.login_required(login_url='/home/login/')
+@decorators.login_required(login_url='/login/')
 def get_info_page(request):
     template = get_template('home/info.html')
     return HttpResponse(template.render({}, request))
 
 
-@decorators.login_required(login_url='/home/login')
+@decorators.login_required(login_url='/login')
 def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -125,7 +127,7 @@ def upload_file_2(request):
         
     return render(request, 'home/upload.html', {'form': form})
 
-@decorators.login_required(login_url = "home/login")
+@decorators.login_required(login_url = "/login/")
 def get_contest(request, id = 1):
     if request.method == 'POST':
         data = {}
@@ -231,7 +233,7 @@ def get_contest(request, id = 1):
         }
     )
 
-@decorators.login_required(login_url="/home/login")
+@decorators.login_required(login_url="/login")
 def get_submission_page(request, id=1):
     contest = Contest.objects.get(id=id)
     submissions = Submission.objects.filter(contest=contest)
