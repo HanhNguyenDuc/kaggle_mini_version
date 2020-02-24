@@ -29,7 +29,7 @@ DEBUG = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['aiforce-submit.herokuapp.com']
 
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/home/login'
