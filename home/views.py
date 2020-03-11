@@ -189,7 +189,7 @@ def get_contest(request, id = 1):
     content.update({'max_score': contest.max_score})
     content.update({'description': contest.description})
     content.update({'data_path': contest.data_path})
-    content.update({'test_data_path': content.test_data_path})
+    content.update({'test_data_path': contest.test_data_path})
     content.update({'img_url': contest.represent_image})
     content.update({'id': id})
 
