@@ -218,7 +218,7 @@ def get_contest(request, id = 1):
             tmp_rank.update({'order': key})
             tmp_rank.update({'first_name': member.first_name})
             tmp_rank.update({'last_name': member.last_name})
-            tmp_rank.update({'score': highest_score})
+            tmp_rank.update({'score': highest_score})   
             rank_list.append(tmp_rank)
 
     return render(
