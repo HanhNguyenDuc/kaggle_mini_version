@@ -49,7 +49,7 @@ class RegisterView(View):
         if form.is_valid():
             form.save()
             print('Member has been saved')
-            return HttpResponseRedirect('/home/login')
+            return HttpResponseRedirect('/login')
         else:
             print('form is not valid')
 
@@ -178,7 +178,7 @@ def get_contest(request, id = 1):
                 print(e)
                 data['server_msg'] = "File submitted is illegal"
             print(data['server_msg'])
-            return HttpResponseRedirect('/home/contest/{}'.format(id))
+            return HttpResponseRedirect('/contest/{}'.format(id))
     else:
         form = SubmissionForm()
     
