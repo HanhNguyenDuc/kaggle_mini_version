@@ -18,7 +18,7 @@ class Contest(models.Model):
     id = models.IntegerField(auto_created=True, primary_key=True)
     name = models.CharField(name="name", default="contest_x", max_length=100)
     data_path = models.CharField(name="data_path", default="/", max_length=100)
-    data_test_path = models.CharField(name="data_test", default="/", max_length=100)
+    data_test_path = models.CharField(name="test_data_path", default="/", max_length=100)
     max_score = models.IntegerField(name="max_score", default=100)
     description = models.CharField(name="description", default="Empty", max_length=1000)
     data_required = models.BooleanField(name="data_require", default=True)
